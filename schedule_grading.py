@@ -249,6 +249,7 @@ def main():
 
     if not error_occured:
         write_to_csv(next_list, next_assignment)
+        print('Wrote to {}.csv.'.format(next_assignment))
         sys.exit(0)
     else:
         error('Did not write CSV due to error.')
