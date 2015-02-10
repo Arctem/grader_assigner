@@ -77,8 +77,9 @@ def load_history_file(filename, graders, students):
 
             if not grader:
                 error('Could not match grader {} for {}.'.format(grader_name, filename))
+                error('A former grader should be simply given a limit of 0 to grade.')
             if not student:
-                error('Could not match student {} for {}.'.format(student_name, filename))
+                warning('Could not match student {} for {}.'.format(student_name, filename))
             if grader and student:
                 data[grader].append(student)
 
