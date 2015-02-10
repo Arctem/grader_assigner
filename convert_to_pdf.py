@@ -6,12 +6,29 @@ import schedule_grading
 import grader
 
 base_start = r"""\documentclass[9pt, onecolumn]{extarticle}
-\usepackage[top=1.0in, left=1.0in, right=1.0in, bottom=1.0in]{geometry}
+%\usepackage[top=1.0in, left=1.0in, right=1.0in, bottom=1.0in]{geometry}
+\usepackage{longtable}
+\usepackage{hyperref}
 \begin{document}
-\begin{tabular}{| l | l | l | l | l |}\hline
-Student Last & Student First & Grader Name & Grader Email\\\hline""" + "\n"
+\begin{center}
+\begin{longtable}{| l | l | l | l |}
+\hline
+\textbf{Student Last} & \textbf{Student First} & \textbf{Grader Name} & \textbf{Grader Email} \\
+\hline
+\endfirsthead
+\multicolumn{4}{c}%
+{\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+\hline
+\textbf{Student Last} & \textbf{Student First} & \textbf{Grader Name} & \textbf{Grader Email} \\
+\hline
+\endhead
+\hline \multicolumn{4}{r}{\textit{Continued on next page}} \\
+\endfoot
+\hline
+\endlastfoot""" + "\n"
 
-base_end = r"""\end{tabular}
+base_end = r"""\end{longtable}
+\end{center}
 \end{document}""" + "\n"
 
 
@@ -33,13 +50,15 @@ def make_pdf(assignment, graders):
             if not grader:
                 schedule_grading.error('Could not match grader {}.'.format(grader_name))
             else:
-                tex_file.write('\t{} & {} & {} & {}\\\\\\hline\n'.format(line[3], line[2],\
-                    grader.name[0], grader.email))
+                tex_file.write('\t{0} & {1} & {2} {3} & \\href{{mailto:{4}}}{{{4}}}\\\\\\hline\n'\
+                    .format(line[3], line[2], grader.name[0], grader.name[1], grader.email))
 
         tex_file.write(base_end)
 
-    proc=subprocess.Popen(shlex.split('pdflatex -interactive=nonstopmode {}'.format(tex_filename)))
-    proc.communicate()
+    #running this twice because LaTeX is dumb like that
+    for i in range(2):
+        proc=subprocess.Popen(shlex.split('pdflatex -interactive=nonstopmode {}'.format(tex_filename)))
+        proc.communicate()
 
 
 def main():
