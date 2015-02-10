@@ -10,3 +10,4 @@ format as in test_case. If applicable, add any historical data in files named
 ### TODO
 * Make a better name.
 * Add script to convert assignment .csv files into .pdf (or at least .tex).
+* Add weights to allow graders to prefer or avoid certain students.
