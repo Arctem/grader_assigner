@@ -32,6 +32,7 @@ Each line should list one assignment, with all of the files being in chronologic
 ##### graders.csv
 This file should be a semicolon-delimited CSV of the graders for a class. The columns for the
 file should be as follows:
+
 | Grader First Name | Grader Last Name | Grader Email | Grader Hours |
 |-------------------|------------------|--------------|--------------|
 
@@ -45,6 +46,7 @@ scheduling conflict occurs would have 0+2 in their hours column.
 ##### students.csv
 This file should be a semicolon-delimited CSV of the students for a class. The columns for the
 file should be as follows:
+
 | Student First Name | Student Last Name |
 |--------------------|-------------------|
 
