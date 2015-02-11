@@ -41,6 +41,38 @@ def load_assignments(filename):
             assignments.append(line.strip())
     return assignments
 
+def load_weights(filename, graders, students):
+    weights = {}
+    for grader in graders:
+        weights[grader] = {}
+    try:
+        with open(filename, 'r') as wfile:
+            for line in wfile:
+                line = line.split(';')
+                grader_name = line[0], line[1]
+                student_name = line[2], line[3]
+                weight = float(line[4])
+
+                grader = None
+                student = None
+                for g in graders:
+                    if g.name == grader_name:
+                        grader = g
+                for s in students:
+                    if s.name == student_name:
+                        student = s
+
+                if not grader:
+                    error('Could not match grader {} in {}.'.format(grader_name, filename))
+                    error('A former grader should be simply given a limit of 0 to grade.')
+                if not student:
+                    error('Could not match student {} in {}.'.format(student_name, filename))
+                if grader and student:
+                    weights[grader][student] = weight
+    except FileNotFoundError:
+        warning('No {} file found.'.format(filename))
+    return weights
+
 def load_history(assignments, graders, students):
     data = {}
 
@@ -107,6 +139,12 @@ def calculate_tslg(assignments, history, graders, students):
             if student not in tslg[grader].keys():
                 tslg[grader][student] = counter + 1
 
+    return tslg
+
+def apply_weights(tslg, weights):
+    for grader in weights:
+        for student in weights[grader]:
+            tslg[grader][student] *= weights[grader][student]
     return tslg
 
 def get_max_tslg(tslg, student):
@@ -225,6 +263,7 @@ def main():
     graders = load_graders('graders.csv')
     students = load_students('students.csv')    
     assignments = load_assignments('assignment_list.txt')
+    weights = load_weights('weights.csv', graders, students)
 
     graders.sort(key=lambda g:g.hours + 0.5 if g.overflow else 0)
     students.sort(key=lambda s:(s.name[1], s.name[0]))
@@ -242,6 +281,7 @@ def main():
     next_assignment = assignments[len(history.keys())]
 
     tslg = calculate_tslg(graded_assignments, history, graders, students)
+    tslg = apply_weights(tslg, weights)
 
     #to be used to specify which graders shouldn't grade certain students, for example
     #history = adjust_with_weights(history)
