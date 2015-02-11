@@ -202,7 +202,7 @@ def make_grader_list(tslg, graders, students):
                     break
 
             if not assigned:
-                print(overflow_graders, student)
+                #print(overflow_graders, student)
                 overflow_selection = sorted(overflow_graders,\
                     key=lambda g: tslg[g][student], reverse=True)
                 overflow_selection = list(filter(lambda g:\
@@ -210,11 +210,11 @@ def make_grader_list(tslg, graders, students):
 
                 overflow_selection = overflow_selection[0] if overflow_selection else None
 
-                print()
-                print(student)
-                print(split_graders)
-                print(grader_list)
-                print()
+                #print()
+                #print(student)
+                #print(split_graders)
+                #print(grader_list)
+                #print()
 
                 if not overflow_selection or tslg[overflow_selection][student] <= 1:
                     error('{} was not assigned a grader.'.format(student))
@@ -223,7 +223,7 @@ def make_grader_list(tslg, graders, students):
                     grader_list[overflow_selection].append(student)
                     warning('{} was assigned to an overflow grader.'.format(student))
 
-    print(grader_list)
+    #print(grader_list)
     return grader_list
 
 def write_to_csv(grader_list, assignment):
