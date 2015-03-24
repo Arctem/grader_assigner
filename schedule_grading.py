@@ -10,6 +10,7 @@ except ImportError:
     print('For extra useless functionality, install colorama.')
     colorama = None
 
+from assignment import Assignment
 from grader import Grader
 from student import Student
 
@@ -38,7 +39,8 @@ def load_assignments(filename):
     assignments = []
     with open(filename, 'r') as afile:
         for line in afile:
-            assignments.append(line.strip())
+            line = line.strip()
+            assignments.append(Assignment(line))
     return assignments
 
 def load_weights(filename, graders, students):
@@ -77,9 +79,9 @@ def load_history(assignments, graders, students):
     data = {}
 
     for assignment in assignments:
-        filename = assignment + '.csv'
+        filename = assignment.id + '.csv'
         if os.path.isfile(filename):
-            data[assignment] = load_history_file(filename, graders, students)
+            data[assignment.id] = load_history_file(filename, graders, students)
         else:
             break
     print('Loaded history for first {} assignments.'.format(len(data.keys())))
@@ -125,6 +127,7 @@ def calculate_tslg(assignments, history, graders, students):
         tslg[grader] = {}
     assignments = assignments[::-1]
     for assignment in assignments:
+        assignment = assignment.id
         data = history[assignment]
 
         for grader in data:
@@ -233,7 +236,7 @@ def write_to_csv(grader_list, assignment):
             line = ';'.join(grader.name + student.name) + '\n'
             lines.append(line)
 
-    with open(assignment + '.csv', 'w') as csv_file:
+    with open(assignment.id + '.csv', 'w') as csv_file:
         csv_file.writelines(lines)
 
 
@@ -290,7 +293,7 @@ def main():
 
     if not error_occured:
         write_to_csv(next_list, next_assignment)
-        print('Wrote to {}.csv.'.format(next_assignment))
+        print('Wrote to {}.csv.'.format(next_assignment.id))
         sys.exit(0)
     else:
         error('Did not write CSV due to error.')
