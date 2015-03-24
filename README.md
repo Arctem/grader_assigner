@@ -33,15 +33,19 @@ Each line should list one assignment, with all of the files being in chronologic
 This file should be a semicolon-delimited CSV of the graders for a class. The columns for the
 file should be as follows:
 
-| Grader First Name | Grader Last Name | Grader Email | Grader Hours |
+| Grader First Name | Grader Last Name | Grader Email | Max Students |
 |-------------------|------------------|--------------|--------------|
 
-There should be no spaces around the semicolons. Hours should be in the form of an integer, with
-an optional addition to specify "overflow" hours. Overflow hours indicate that a grader can be
-assigned an additional number of grading hours, but only if no normal hours are available.
-The syntax for this column should be <normal_hours>+<overflow_hours>. For example, a grader who
-is not normally supposed to grade students but can grade 2 students in the case where a
-scheduling conflict occurs would have 0+2 in their hours column.
+There should be no spaces around the semicolons. Maximum students per assignment
+ should be in the form of an integer, with
+an optional addition to specify "overflow" students. Overflow students indicate
+that a grader can be
+assigned an additional number of students, but only if it is impossible to use
+up any grader's normal students for the assignment.
+The syntax for this column should be <normal_students>+<overflow_students>. For
+example, a grader who
+is not normally supposed to grade students but can grade 2 students in the case
+where a scheduling conflict occurs would have 0+2 in their max students column.
 
 ##### [`students.csv`](test_case/students.csv)
 This file should be a semicolon-delimited CSV of the students for a class. The columns for the
@@ -57,7 +61,7 @@ Examples of these files are in the [`test_case`](test_case) subdirectory of the 
 
 ##### [`weights.csv`](test_case/weights.csv)
 This file should be a semicolon-delimited CSV specifying the weights for various graders
-and students in a class. This cat be used to indicate whether a grader should not grade
+and students in a class. This can be used to indicate whether a grader should not grade
 a specific student (weight of 0), whether they should grade a student less frequently
 than normal (weight < 1), or grade a student more frequently than normal (weight > 1).
 If no weight is specified, it is assumed to be 1.
