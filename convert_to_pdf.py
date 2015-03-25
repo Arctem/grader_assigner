@@ -39,9 +39,14 @@ base_end = r"""\end{longtable}
 \end{document}""" + "\n"
 
 
-def make_pdf(assignment, graders):
+def make_pdf(assignment, graders, output_filename=None):
     start_filename = assignment.id + '.csv'
     tex_filename = assignment.id + '.tex'
+    if not output_filename:
+        output_filename = assignment.long_name + '.pdf'
+    else:
+        output_filename = output_filename.replace('$ass_name',
+            assignment.long_name) + '.pdf'
     with open(start_filename, 'r') as csv_file:
         lines = csv_file.readlines()
     lines = sorted(map(lambda x: x.strip().split(';'), lines), key=lambda l:l[3] + ', ' + l[2])
@@ -67,7 +72,8 @@ def make_pdf(assignment, graders):
     #running this twice because LaTeX is dumb like that
     for i in range(2):
         proc=subprocess.Popen(shlex.split(
-            'pdflatex -interactive=nonstopmode {}'.format(tex_filename)))
+            'pdflatex -interactive=nonstopmode {} -job-name={}'
+            .format(tex_filename, output_filename)))
         proc.communicate()
     proc=subprocess.Popen(shlex.split(
         'rm {0}.tex {0}.out {0}.log {0}.aux'.format(assignment.id)))
@@ -77,11 +83,17 @@ def make_pdf(assignment, graders):
 def main():
     graders = schedule_grading.load_graders('graders.csv')
     assignments = schedule_grading.load_assignments('assignment_list.txt')
+    try:
+        with open('output_pdf.txt', 'r') as output_pdf:
+            output_filename = output_pdf.read().strip()
+    except FileNotFoundError:
+        schedule_grading.warning('Could not open output_pdf.txt.')
+        output_filename = None
 
     for assignment in assignments:
         filename = assignment.id + '.csv'
         if os.path.isfile(filename):
-            make_pdf(assignment, graders)
+            make_pdf(assignment, graders, output_filename)
 
 
 if __name__ == '__main__':
