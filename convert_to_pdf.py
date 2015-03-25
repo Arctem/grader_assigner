@@ -9,7 +9,14 @@ base_start = r"""\documentclass[9pt, onecolumn]{extarticle}
 %\usepackage[top=1.0in, left=1.0in, right=1.0in, bottom=1.0in]{geometry}
 \usepackage{longtable}
 \usepackage{hyperref}
+\title{$ass_name}
+\date{}
 \begin{document}
+
+\maketitle{}
+
+$ass_desc
+
 \begin{center}
 \begin{longtable}{| l | l | l | l |}
 \hline
@@ -33,14 +40,16 @@ base_end = r"""\end{longtable}
 
 
 def make_pdf(assignment, graders):
-    start_filename = assignment + '.csv'
-    tex_filename = assignment + '.tex'
+    start_filename = assignment.id + '.csv'
+    tex_filename = assignment.id + '.tex'
     with open(start_filename, 'r') as csv_file:
         lines = csv_file.readlines()
     lines = sorted(map(lambda x: x.strip().split(';'), lines), key=lambda l:l[3] + ', ' + l[2])
     print(lines)
     with open(tex_filename, 'w') as tex_file:
-        tex_file.write(base_start)
+        start = base_start.replace('$ass_name', assignment.long_name)
+        start = start.replace('$ass_desc', assignment.desc)
+        tex_file.write(start)
         for line in lines:
             grader_name = line[0], line[1]
             grader = None
@@ -57,8 +66,12 @@ def make_pdf(assignment, graders):
 
     #running this twice because LaTeX is dumb like that
     for i in range(2):
-        proc=subprocess.Popen(shlex.split('pdflatex -interactive=nonstopmode {}'.format(tex_filename)))
+        proc=subprocess.Popen(shlex.split(
+            'pdflatex -interactive=nonstopmode {}'.format(tex_filename)))
         proc.communicate()
+    proc=subprocess.Popen(shlex.split(
+        'rm {0}.tex {0}.out {0}.log {0}.aux'.format(assignment.id)))
+    proc.communicate()
 
 
 def main():
@@ -66,7 +79,7 @@ def main():
     assignments = schedule_grading.load_assignments('assignment_list.txt')
 
     for assignment in assignments:
-        filename = assignment + '.csv'
+        filename = assignment.id + '.csv'
         if os.path.isfile(filename):
             make_pdf(assignment, graders)
 

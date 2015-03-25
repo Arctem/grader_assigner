@@ -1,6 +1,6 @@
-lab1
-lab2
-lab3
-lab4
-lab5
-lab6
+lab1;Lab 1;Please do a thing with the stuff.
+lab2;Lab 2;Please do a thing with the stuff.
+lab3;Lab 3;Please do a thing with the stuff.
+lab4;Lab 4;Please do a thing with the stuff.
+lab5;Lab 5;Please do a thing with the stuff.
+lab6;Lab 6;Please do a thing with the stuff.
