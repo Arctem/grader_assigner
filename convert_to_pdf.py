@@ -43,10 +43,10 @@ def make_pdf(assignment, graders, output_filename=None):
     start_filename = assignment.id + '.csv'
     tex_filename = assignment.id + '.tex'
     if not output_filename:
-        output_filename = assignment.long_name + '.pdf'
+        output_filename = assignment.long_name
     else:
         output_filename = output_filename.replace('$ass_name',
-            assignment.long_name) + '.pdf'
+            assignment.long_name)
     with open(start_filename, 'r') as csv_file:
         lines = csv_file.readlines()
     lines = sorted(map(lambda x: x.strip().split(';'), lines), key=lambda l:l[3] + ', ' + l[2])
@@ -72,11 +72,12 @@ def make_pdf(assignment, graders, output_filename=None):
     #running this twice because LaTeX is dumb like that
     for i in range(2):
         proc=subprocess.Popen(shlex.split(
-            'pdflatex -interactive=nonstopmode {} -job-name={}'
-            .format(tex_filename, output_filename)))
+            'pdflatex -interactive=nonstopmode -jobname="{}" {}'
+            .format(output_filename, tex_filename)))
         proc.communicate()
     proc=subprocess.Popen(shlex.split(
-        'rm {0}.tex {0}.out {0}.log {0}.aux'.format(assignment.id)))
+        'rm "{0}.tex" "{1}.out" "{1}.log" "{1}.aux"'.format(assignment.id,
+            output_filename)))
     proc.communicate()
 
 
