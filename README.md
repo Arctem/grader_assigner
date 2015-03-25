@@ -26,8 +26,23 @@ with colored text.
 Examples of these files are in the [`test_case`](test_case) subdirectory of the project.
 
 ##### [`assignment_list.txt`](test_case/assignment_list.txt)
-This file should be a list of the assignments in the class that need to have graders assigned.
-Each line should list one assignment, with all of the files being in chronological order.
+This file should be a semicolon-delimited CSV of the assignments for a class.
+The columns for the file should be as follows:
+
+| Assignment ID | Assignment Long Name | Assignment Description |
+|---------------|----------------------|------------------------|
+
+There should be no spacess around the semicolons. Assignment ID should generally
+be a short descriptor like "lab4" or "hw2". Assignment Long Name will be used
+on the grader sheet PDF and should generally be something like "Lab 4" or
+"Homework 2". The assignment Description might include, for example,
+instructions on the latest date on which a student could email their grader.
+
+Assignment Long Name and Description are both optional. If the Long Name is
+not defined, the ID will be used instead. If the Description is not defined, an
+empty string will be used. The Long Name is required if the Description is used.
+
+Assignments should be listed in chronological order.
 
 ##### [`graders.csv`](test_case/graders.csv)
 This file should be a semicolon-delimited CSV of the graders for a class. The columns for the
