@@ -9,7 +9,7 @@ base_start = r"""\documentclass[9pt, onecolumn]{extarticle}
 %\usepackage[top=1.0in, left=1.0in, right=1.0in, bottom=1.0in]{geometry}
 \usepackage{longtable}
 \usepackage{hyperref}
-\title{$ass_name}
+\title{$ass_title}
 \date{}
 \begin{document}
 
@@ -39,7 +39,7 @@ base_end = r"""\end{longtable}
 \end{document}""" + "\n"
 
 
-def make_pdf(assignment, graders, output_filename=None):
+def make_pdf(assignment, graders, output_filename=None, pdf_title=None):
     start_filename = assignment.id + '.csv'
     tex_filename = assignment.id + '.tex'
     if not output_filename:
@@ -59,6 +59,7 @@ def make_pdf(assignment, graders, output_filename=None):
     print(lines)
     with open(tex_filename, 'w') as tex_file:
         start = base_start.replace('$ass_name', assignment.long_name)
+        start = base_start.replace('$ass_title', pdf_title)
         start = start.replace('$ass_desc', assignment.desc)
         tex_file.write(start)
         for line in lines:
@@ -97,10 +98,17 @@ def main():
         schedule_grading.warning('Could not open output_pdf.txt.')
         output_filename = None
 
+    try:
+        with open('pdf_title.txt', 'r') as pdf_title:
+            pdf_title = pdf_title.read().strip()
+    except FileNotFoundError:
+        schedule_grading.warning('Could not open pdf_title.txt.')
+        pdf_title = None
+
     for assignment in assignments:
         filename = assignment.id + '.csv'
         if os.path.isfile(filename):
-            make_pdf(assignment, graders, output_filename)
+            make_pdf(assignment, graders, output_filename, pdf_title)
 
 
 if __name__ == '__main__':
