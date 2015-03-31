@@ -86,11 +86,16 @@ If no weight is specified, it is assumed to be 1.
 
 ##### [`output_pdf.txt`](test_case/output_pdf.txt)
 This file should be a single line consisting of the desired naming style for the
-output PDF, excluding the `.pdf` suffix. This line should include the string
+output PDF, excluding the `.pdf` suffix. This line should include either the
+string
 `$ass_name`, which will be replaced by the Long Name of the relevant assignment
-when the PDF is produced. If this file does not exist, the assignment's ID will
-be used instead. If this file exists but `$ass_name` is not inside, the produced
-PDFs will overwrite one another due to name collisions.
+when the PDF is produced,
+or `$ass_id`, which will be replaced by the ID of the relevant assignment.
+If this file does not exist, the assignment's ID will
+be used instead. If this file exists but neither `$ass_name` nor `$ass_id`
+are inside, the produced
+PDFs will overwrite one another due to name collisions. This line will also be
+used for the title of the PDF.
 
 The filename should not contain multiple lines, `/`, quotes, or any other
 special file system characters.

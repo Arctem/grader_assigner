@@ -43,10 +43,16 @@ def make_pdf(assignment, graders, output_filename=None):
     start_filename = assignment.id + '.csv'
     tex_filename = assignment.id + '.tex'
     if not output_filename:
-        output_filename = assignment.long_name
-    else:
-        output_filename = output_filename.replace('$ass_name',
-            assignment.long_name)
+        output_filename = '$ass_id'
+    output_filename = output_filename.replace('$ass_name',
+        assignment.long_name).replace('$ass_id', assignment.id)
+
+    if not pdf_title:
+        pdf_title = '$ass_name'
+    
+    pdf_title = pdf_title.replace('$ass_name', assignment.long_name)\
+        .replace('$ass_id', assignment.id)
+
     with open(start_filename, 'r') as csv_file:
         lines = csv_file.readlines()
     lines = sorted(map(lambda x: x.strip().split(';'), lines), key=lambda l:l[3] + ', ' + l[2])
