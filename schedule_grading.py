@@ -151,7 +151,7 @@ def apply_weights(tslg, weights):
     return tslg
 
 def get_max_tslg(tslg, student):
-    return max(map(lambda g: tslg[g][student], tslg))
+    return max(map(lambda g: tslg[g][student] if g.hours else 0, tslg))
 
 def split_students_by_tslg(tslg, students):
     split_students = {}
