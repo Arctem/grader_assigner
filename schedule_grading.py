@@ -209,7 +209,7 @@ def make_grader_list(tslg, graders, students):
                 overflow_selection = sorted(overflow_graders,\
                     key=lambda g: tslg[g][student], reverse=True)
                 overflow_selection = list(filter(lambda g:\
-                    len(grader_list[g]) < g.overflow, overflow_selection))
+                    len(grader_list[g]) < g.hours + g.overflow, overflow_selection))
 
                 overflow_selection = overflow_selection[0] if overflow_selection else None
 
